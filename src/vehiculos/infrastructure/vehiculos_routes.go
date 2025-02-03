@@ -17,7 +17,7 @@ func NewRouter(engine *gin.Engine) *Router {
 func (router *Router) Run() {
 	createController, viewController, updateController, deleteController, viewAllController := InitVehiculoDependencies()
 
-	titularGroup := router.engine.Group("/titulares")
+	titularGroup := router.engine.Group("/vehiculos")
 	{
 		titularGroup.POST("/", createController.Run)
 		titularGroup.GET("/:id", viewController.Execute)
