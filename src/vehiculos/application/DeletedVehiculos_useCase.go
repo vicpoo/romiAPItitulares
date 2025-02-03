@@ -2,12 +2,12 @@ package application
 
 import "github.com/Romieb26/Arquitectura--hexagonal/src/vehiculos/domain"
 
-type DeletedVehiculoUseCase struct {
+type DeleteVehiculoUseCase struct {
 	db domain.IVehiculo
 }
 
-func NewDeletedVehiculoUseCase(db domain.IVehiculo) *DeletedVehiculoUseCase {
-	return &DeletedVehiculoUseCase{
+func NewDeleteVehiculoUseCase(db domain.IVehiculo) *DeleteVehiculoUseCase {
+	return &DeleteVehiculoUseCase{
 		db: db,
 	}
 }
