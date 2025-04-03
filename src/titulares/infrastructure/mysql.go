@@ -1,3 +1,4 @@
+// mysql.go
 package infrastructure
 
 import (
@@ -25,7 +26,7 @@ func (mysql *MysqlTitular) Save(titular entities.Titular) error {
 		"INSERT INTO titulares (nombre, apellido, dni, telefono, direccion) VALUES (?, ?, ?, ?, ?)",
 		titular.Nombre,
 		titular.Apellido,
-		titular.DNI,
+		titular.DNI, // Aquí ya viene encriptado
 		titular.Telefono,
 		titular.Direccion,
 	)

@@ -1,3 +1,4 @@
+// infrastructure/CreateTitulares_controller.go
 package infrastructure
 
 import (
@@ -29,7 +30,25 @@ func (ctrl *CreateTitularController) Run(c *gin.Context) {
 		return
 	}
 
-	titularCreado, errAdd := ctrl.CreateTitularUseCase.Run(&titular)
+	// Crear nuevo titular con DNI encriptado
+	nuevoTitular, err := entities.NewTitular(
+		0, // ID se generará en la DB
+		titular.Nombre,
+		titular.Apellido,
+		titular.DNIRaw, // Usamos el DNI sin encriptar
+		titular.Telefono,
+		titular.Direccion,
+	)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Error al procesar el DNI",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	titularCreado, errAdd := ctrl.CreateTitularUseCase.Run(nuevoTitular)
 
 	if errAdd != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -39,8 +58,17 @@ func (ctrl *CreateTitularController) Run(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message":  "El titular ha sido agregado",
-		"empleado": titularCreado,
-	})
+	// No devolvemos el DNI encriptado en la respuesta
+	response := map[string]interface{}{
+		"message": "El titular ha sido agregado",
+		"titular": map[string]interface{}{
+			"id":        titularCreado.ID,
+			"nombre":    titularCreado.Nombre,
+			"apellido":  titularCreado.Apellido,
+			"telefono":  titularCreado.Telefono,
+			"direccion": titularCreado.Direccion,
+		},
+	}
+
+	c.JSON(http.StatusOK, response)
 }

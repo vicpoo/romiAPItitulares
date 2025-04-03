@@ -1,3 +1,4 @@
+// Titulares_repository.go
 package domain
 
 import "github.com/Romieb26/Arquitectura--hexagonal/src/titulares/domain/entities"
