@@ -1,4 +1,4 @@
-// titulares_routes.go
+// infrastructure/titulares_routes.go
 package infrastructure
 
 import (
@@ -16,7 +16,7 @@ func NewRouter(engine *gin.Engine) *Router {
 }
 
 func (router *Router) Run() {
-	createController, viewController, updateController, deleteController, viewAllController := InitTitularDependencies()
+	createController, viewController, updateController, deleteController, viewAllController, sendEmailController := InitTitularDependencies()
 
 	titularGroup := router.engine.Group("/titulares")
 	{
@@ -25,5 +25,6 @@ func (router *Router) Run() {
 		titularGroup.PUT("/:id", updateController.Execute)
 		titularGroup.DELETE("/:id", deleteController.Run)
 		titularGroup.GET("/", viewAllController.Execute)
+		titularGroup.POST("/send-email", sendEmailController.Run)
 	}
 }

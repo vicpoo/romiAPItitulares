@@ -23,10 +23,11 @@ func NewMysqlTitularRepository() domain.ITitulares {
 // Save implementa el método de la interfaz ITitulares.
 func (mysql *MysqlTitular) Save(titular entities.Titular) error {
 	result, err := mysql.conn.Exec(
-		"INSERT INTO titulares (nombre, apellido, dni, telefono, direccion) VALUES (?, ?, ?, ?, ?)",
+		"INSERT INTO titulares (nombre, apellido, email, dni, telefono, direccion) VALUES (?, ?, ?, ?, ?, ?)",
 		titular.Nombre,
 		titular.Apellido,
-		titular.DNI, // Aquí ya viene encriptado
+		titular.Email,
+		titular.DNI,
 		titular.Telefono,
 		titular.Direccion,
 	)

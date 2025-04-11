@@ -35,6 +35,7 @@ func (ctrl *CreateTitularController) Run(c *gin.Context) {
 		0, // ID se generará en la DB
 		titular.Nombre,
 		titular.Apellido,
+		titular.Email,
 		titular.DNIRaw, // Usamos el DNI sin encriptar
 		titular.Telefono,
 		titular.Direccion,
@@ -42,7 +43,7 @@ func (ctrl *CreateTitularController) Run(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": "Error al procesar el DNI",
+			"message": "Error al procesar los datos del titular",
 			"error":   err.Error(),
 		})
 		return
@@ -65,6 +66,7 @@ func (ctrl *CreateTitularController) Run(c *gin.Context) {
 			"id":        titularCreado.ID,
 			"nombre":    titularCreado.Nombre,
 			"apellido":  titularCreado.Apellido,
+			"email":     titularCreado.Email,
 			"telefono":  titularCreado.Telefono,
 			"direccion": titularCreado.Direccion,
 		},

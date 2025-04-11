@@ -1,7 +1,10 @@
-// CreateTitulares_useCase.go
+// application/CreateTitulares_useCase.go
 package application
 
 import (
+	"errors"
+	"strings"
+
 	"github.com/Romieb26/Arquitectura--hexagonal/src/titulares/domain"
 	"github.com/Romieb26/Arquitectura--hexagonal/src/titulares/domain/entities"
 )
@@ -17,6 +20,20 @@ func NewCreateTitularUseCase(db domain.ITitulares) *CreateTitularUseCase {
 }
 
 func (uc *CreateTitularUseCase) Run(titular *entities.Titular) (*entities.Titular, error) {
+	// Validar que el email no esté vacío
+	if titular.Email == "" {
+		return nil, errors.New("el email es requerido")
+	}
+
+	// Validar formato de email (puedes usar una librería más robusta para esto)
+	if !strings.Contains(titular.Email, "@") || !strings.Contains(titular.Email, ".") {
+		return nil, errors.New("formato de email inválido")
+	}
+
 	err := uc.db.Save(*titular)
-	return titular, err
+	if err != nil {
+		return nil, err
+	}
+
+	return titular, nil
 }

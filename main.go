@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/Romieb26/Arquitectura--hexagonal/src/core"
-	EmainInfra "github.com/Romieb26/Arquitectura--hexagonal/src/email/infrastructure"
 	titularesInfra "github.com/Romieb26/Arquitectura--hexagonal/src/titulares/infrastructure"
 	vehiculosInfra "github.com/Romieb26/Arquitectura--hexagonal/src/vehiculos/infrastructure"
 	"github.com/gin-gonic/gin"
@@ -21,9 +20,6 @@ func main() {
 
 	vehiculosRouter := vehiculosInfra.NewRouter(r)
 	vehiculosRouter.Run()
-
-	emailRouter := EmainInfra.NewEmailRouter(r)
-	emailRouter.Run()
 
 	err := r.Run(":8000")
 	if err != nil {

@@ -1,4 +1,4 @@
-// Titulares.go
+// entities/Titulares.go
 package entities
 
 import "github.com/Romieb26/Arquitectura--hexagonal/src/core"
@@ -7,14 +7,21 @@ type Titular struct {
 	ID        int    `json:"id"`
 	Nombre    string `json:"nombre"`
 	Apellido  string `json:"apellido"`
+	Email     string `json:"email"`
 	DNI       string `json:"dni"`
 	Telefono  int16  `json:"telefono"`
 	Direccion string `json:"direccion"`
 	DNIRaw    string `json:"-"`
 }
 
-func NewTitular(id int, nombre, apellido, dni string, telefono int16, direccion string) (*Titular, error) {
-	// Encriptar el DNI al crear un nuevo titular
+type EmailData struct {
+	FromID  int    `json:"from_id"`
+	ToID    int    `json:"to_id"`
+	Subject string `json:"subject"`
+	Message string `json:"message"`
+}
+
+func NewTitular(id int, nombre, apellido, email, dni string, telefono int16, direccion string) (*Titular, error) {
 	dniEncrypted, err := core.EncryptPassword(dni)
 	if err != nil {
 		return nil, err
@@ -24,8 +31,9 @@ func NewTitular(id int, nombre, apellido, dni string, telefono int16, direccion 
 		ID:        id,
 		Nombre:    nombre,
 		Apellido:  apellido,
+		Email:     email,
 		DNI:       dniEncrypted,
-		DNIRaw:    dni, // Guardamos temporalmente el DNI sin encriptar
+		DNIRaw:    dni,
 		Telefono:  telefono,
 		Direccion: direccion,
 	}, nil
