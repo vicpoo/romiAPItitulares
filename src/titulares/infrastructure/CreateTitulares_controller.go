@@ -9,14 +9,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// CreateTitularController maneja las solicitudes de creación de titulares
 type CreateTitularController struct {
 	CreateTitularUseCase *application.CreateTitularUseCase
 }
 
-func NewCreateTitularController(createTitularUseCase *application.CreateTitularUseCase) *CreateTitularController {
-	return &CreateTitularController{
-		CreateTitularUseCase: createTitularUseCase,
-	}
+func NewCreateTitularController(useCase *application.CreateTitularUseCase) *CreateTitularController {
+	return &CreateTitularController{CreateTitularUseCase: useCase}
 }
 
 func (ctrl *CreateTitularController) Run(c *gin.Context) {
@@ -30,13 +29,12 @@ func (ctrl *CreateTitularController) Run(c *gin.Context) {
 		return
 	}
 
-	// Crear nuevo titular con DNI encriptado
 	nuevoTitular, err := entities.NewTitular(
-		0, // ID se generará en la DB
+		0,
 		titular.Nombre,
 		titular.Apellido,
 		titular.Email,
-		titular.DNIRaw, // Usamos el DNI sin encriptar
+		titular.DNIRaw,
 		titular.Telefono,
 		titular.Direccion,
 	)
@@ -50,7 +48,6 @@ func (ctrl *CreateTitularController) Run(c *gin.Context) {
 	}
 
 	titularCreado, errAdd := ctrl.CreateTitularUseCase.Run(nuevoTitular)
-
 	if errAdd != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": "Error al agregar el titular",
@@ -59,7 +56,6 @@ func (ctrl *CreateTitularController) Run(c *gin.Context) {
 		return
 	}
 
-	// No devolvemos el DNI encriptado en la respuesta
 	response := map[string]interface{}{
 		"message": "El titular ha sido agregado",
 		"titular": map[string]interface{}{
@@ -73,4 +69,33 @@ func (ctrl *CreateTitularController) Run(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, response)
+}
+
+// SendEmailController maneja las solicitudes de envío de emails
+type SendEmailController struct {
+	SendEmailUseCase *application.SendEmailUseCase
+}
+
+func NewSendEmailController(useCase *application.SendEmailUseCase) *SendEmailController {
+	return &SendEmailController{SendEmailUseCase: useCase}
+}
+
+func (ctrl *SendEmailController) Run(c *gin.Context) {
+	var emailData entities.EmailData
+
+	if err := c.ShouldBindJSON(&emailData); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Datos de email inválidos"})
+		return
+	}
+
+	message, err := ctrl.SendEmailUseCase.Run(emailData)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Email enviado exitosamente (simulado)",
+		"details": message,
+	})
 }
