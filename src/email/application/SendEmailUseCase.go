@@ -1,3 +1,4 @@
+// SendEmailUseCase.go
 package application
 
 import (

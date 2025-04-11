@@ -1,3 +1,4 @@
+// Email.go
 package entities
 
 type Email struct {

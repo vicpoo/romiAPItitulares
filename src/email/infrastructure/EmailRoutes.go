@@ -1,3 +1,4 @@
+// EmailRoutes.go
 package infrastructure
 
 import (

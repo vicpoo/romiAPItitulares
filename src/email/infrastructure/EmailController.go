@@ -1,3 +1,4 @@
+// EmailController.go
 package infrastructure
 
 import (
